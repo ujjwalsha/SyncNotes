@@ -15,8 +15,7 @@ function CreatePopup({setIsOpened}) {
     
         try
         {
-             
-             const res =  await axios.post("http://192.168.29.174:8080/api/create",
+             const res =  await axios.post("http://192.168.43.121:8080/api/create",
                             {title, content},
                             {
                                 headers:{
@@ -76,8 +75,7 @@ function CreatePopup({setIsOpened}) {
                 ></textarea>
             </div>
 
-            
-
+        
             <button 
             onClick={AddHandle}
             className='button hover:bg-green-900 cursor-pointer flex w-fit items-center p-2 bg-green-600 '>

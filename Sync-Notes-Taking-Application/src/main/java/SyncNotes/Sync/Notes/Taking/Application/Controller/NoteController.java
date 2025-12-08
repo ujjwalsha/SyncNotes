@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.UUID;
+
 @RestController
 @RequestMapping("/api")
 public class NoteController {
@@ -31,4 +33,9 @@ public class NoteController {
         return noteService.createNote(noteRequest);
     }
 
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<?> deleteById(@PathVariable UUID id)
+    {
+        return noteService.deleteById(id);
+    }
 }

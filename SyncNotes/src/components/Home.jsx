@@ -4,7 +4,12 @@ import CreatePopup from './CreatePopup';
 import axios from 'axios';
 import StarBorderIcon from '@mui/icons-material/StarBorder';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
+import DeleteIcon from '@mui/icons-material/Delete';
 import NotesPage from './NotesPage';
+import toast, {Toaster} from 'react-hot-toast'
+import ClearIcon from '@mui/icons-material/Clear';
+import { Try } from '@mui/icons-material';
+
 
 export default function Home() {
 
@@ -16,10 +21,13 @@ export default function Home() {
     const [note, setNote] = useState([]); 
     const [Favourite, setFourite] = useState(false);
     const [selectedNote, setSelectedNote] = useState(null);
+    const [deletePop, setDeletePop] = useState(false);
+    const [deleteTrigger, setDeleteTrigger] = useState(false);
+    const [id, setId] = useState("");
 
     useEffect(()=>{
 
-        axios.get("http://192.168.29.174:8080/api/all")
+        axios.get("http://192.168.43.121:8080/api/all")
         .then(Response => {
             console.log(Response)
             setNote(Response.data.Note)
@@ -30,7 +38,7 @@ export default function Home() {
         )
         
 
-    }, [isOpened])
+    }, [isOpened, deleteTrigger])
 
 
     const handleNote = (data) =>{
@@ -45,6 +53,34 @@ export default function Home() {
             navigate("/")
         }
 
+    }
+
+
+    const handleDelete = async () =>{
+       
+        try
+        {
+             const res = await axios.delete(`http://192.168.43.121:8080/api/delete/${id}`)
+             console.log(res);
+             setDeleteTrigger((prev)=> !prev);
+             setDeletePop((prev) => !prev);
+             toast(res.data.message, {
+                    icon: '✌️',
+                 });
+        }
+        catch(error)
+        {
+            console.log("error");
+            
+        }
+       
+
+    }
+
+
+    const handleDeleteTrigger = (id) =>{
+        setDeletePop((prev)=> !prev)
+        setId(id);
     }
 
   return (
@@ -71,28 +107,40 @@ export default function Home() {
                     <p className='text-gray-500'>{note.length}: notes</p>
                 </div>
 
-                <div className='all-notes mt-5 w-2/3 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 lg:grid-cols-4'>
+                <div className='all-notes mt-5 w-2/3  grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 lg:grid-cols-4'>
                     
                     {
                         note.length ?
                         (
                             note.map((n) =>(
-                                <div onClick={()=>handleNote(n)}  className='bg-gray-900 border  border-green-600 gap-4 cursor-pointer hover:bg-gray-800 flex flex-col  text-gray-400  p-3 rounded-sm' key={n.id}>
-                                    <div className='flex justify-end'>
-                                        <button 
-                                            className='cursor-pointer'
-                                            onClick={() => setFourite((prev) => !prev)}
-                                        >
-                                        <StarBorderIcon></StarBorderIcon>
-                                        </button>
-                                    </div>
-                                
-                                    <h1>{n.title}</h1>
-                                    <div className='flex justify-end '>
-                                        <p>{n.updatedAt}</p>
-                                    </div>
-                                    
-                                </div>
+
+                                  <div className='relative'>
+                                        <div className='absolute right-0 p-2 flex justify-end'>
+                                                <button 
+                                                    className='cursor-pointer hover:shadow-2xs'
+                                                    onClick={() => setFourite((prev) => !prev)}
+                                                >
+                                                <StarBorderIcon></StarBorderIcon>
+                                                </button>
+                                        </div>
+
+                                        <div onClick={()=>handleNote(n)}  className='bg-gray-900 border   border-green-600 gap-4 cursor-pointer hover:bg-gray-800 flex flex-col  text-gray-400 p-6 h-full rounded-sm' key={n.id}>
+                                        
+                                            <h1>{n.title}</h1>
+                                            <div className='flex justify-end '>
+                                                
+                                                <p>{n.updatedAt}</p>
+                                            </div>
+                                        </div>
+
+                                        <div className='absolute left-1 bottom-1 '>
+                                            <button 
+                                                onClick={() => handleDeleteTrigger(n.id)}
+                                            >
+                                                <DeleteIcon></DeleteIcon>
+                                            </button>
+                                        </div>
+                                  </div>
                             ))
                         )
                         :
@@ -122,6 +170,47 @@ export default function Home() {
 
             }
         </div>
+
+        <div>
+            {
+                deletePop ?
+                (
+                    <div className=' top-[30%] left-[35%] rounded-sm absolute backdrop-blur-xl border-green-600 border-[.1px]  p-5 w-1/3 h-1/3'>
+                        <div 
+                            className='flex justify-end'
+                            onClick={() => setDeletePop((prev)=> !prev)}
+                        >
+                                <ClearIcon fontSize='large'></ClearIcon>
+                        </div>
+                        <div className='flex flex-col gap-10 justify-center items-center'>
+                            <div className='border-green-600  w-fit'>
+                                <p className='text-7xl'>🫣</p>
+                            </div>
+
+                            <div className='flex gap-5'>
+                                <button
+                                    className='bg-gray-900 p-2 rounded-sm' 
+                                    onClick={handleDelete}
+                                >Delete Parmanently</button>
+                                <button
+                                    className='bg-green-600 p-2 rounded-sm'
+                                >Move to Trash</button>
+                            </div>
+                        </div>
+                        
+                    </div>
+                )
+                :
+                (
+                    <p></p>
+                )
+            }
+        </div>
+
+         <Toaster
+            position="top-center"
+            reverseOrder={false}
+        />
     </>
     
   )

@@ -28,7 +28,6 @@ export default function NotesPage() {
                
                 <div className='whitespace-pre-wrap flex justify-between'>
                     {note.content}
-
                     <div className='cursor-pointer'>
                         <EditIcon></EditIcon>
                      </div>

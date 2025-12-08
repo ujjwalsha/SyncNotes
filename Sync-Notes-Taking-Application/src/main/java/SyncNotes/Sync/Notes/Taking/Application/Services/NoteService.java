@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class NoteService {
@@ -51,5 +52,16 @@ public class NoteService {
         noteRepo.save(newNote);
 
         return ResponseEntity.status(HttpStatus.valueOf(200)).body(Map.of("message", "successfully added"));
+    }
+
+    public ResponseEntity<?> deleteById(UUID id) {
+
+        if(noteRepo.existsById(id))
+        {
+            noteRepo.deleteById(id);
+            return ResponseEntity.status(HttpStatus.OK).body(Map.of("message", "Deleted Successfully!"));
+        }
+
+        return ResponseEntity.status(HttpStatus.valueOf(400)).body("something wrong");
     }
 }
