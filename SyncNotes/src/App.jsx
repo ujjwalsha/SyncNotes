@@ -4,6 +4,8 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import Home from './components/Home'
 import Navbar from './components/Navbar'
 import NotesPage from './components/NotesPage'
+import { Favorite } from '@mui/icons-material'
+import Favourite from './components/Favourite'
 
 function App() {
 
@@ -15,6 +17,10 @@ function App() {
     {
       path:"/notes",
       element: <><Navbar/><NotesPage/></>
+    },
+    {
+      path:"/favourite",
+      element:<><Navbar/><Favourite/></>
     }
   ])
 

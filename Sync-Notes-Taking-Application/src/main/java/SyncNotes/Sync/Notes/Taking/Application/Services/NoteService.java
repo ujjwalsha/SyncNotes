@@ -9,10 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class NoteService {
@@ -54,6 +51,9 @@ public class NoteService {
         return ResponseEntity.status(HttpStatus.valueOf(200)).body(Map.of("message", "successfully added"));
     }
 
+
+
+
     public ResponseEntity<?> deleteById(UUID id) {
 
         if(noteRepo.existsById(id))
@@ -63,5 +63,18 @@ public class NoteService {
         }
 
         return ResponseEntity.status(HttpStatus.valueOf(400)).body("something wrong");
+    }
+
+    public ResponseEntity<?> updateNote(NoteRequest noteRequest, UUID id) {
+
+        Note existNote = noteRepo.findById(id).orElseThrow(() -> new NoSuchElementException("note not found"));
+
+        existNote.setTitle(noteRequest.getTitle());
+        existNote.setContent(noteRequest.getContent());
+
+        noteRepo.save(existNote);
+
+        return new ResponseEntity<>("updated successfully", HttpStatus.ACCEPTED);
+
     }
 }

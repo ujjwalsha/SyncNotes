@@ -8,7 +8,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import NotesPage from './NotesPage';
 import toast, {Toaster} from 'react-hot-toast'
 import ClearIcon from '@mui/icons-material/Clear';
-import { Try } from '@mui/icons-material';
+import StarIcon from '@mui/icons-material/Star';
 
 
 export default function Home() {
@@ -19,15 +19,15 @@ export default function Home() {
     const location = useLocation();
 
     const [note, setNote] = useState([]); 
-    const [Favourite, setFourite] = useState(false);
     const [selectedNote, setSelectedNote] = useState(null);
     const [deletePop, setDeletePop] = useState(false);
     const [deleteTrigger, setDeleteTrigger] = useState(false);
     const [id, setId] = useState("");
+    const [FavId, setFavId] = useState([]);
 
     useEffect(()=>{
 
-        axios.get("http://192.168.43.121:8080/api/all")
+        axios.get("http://192.168.29.174:8080/api/all")
         .then(Response => {
             console.log(Response)
             setNote(Response.data.Note)
@@ -42,8 +42,6 @@ export default function Home() {
 
 
     const handleNote = (data) =>{
-
-        // setSelectedNote(data);
 
         if(location.pathname === "/")
         {
@@ -60,7 +58,7 @@ export default function Home() {
        
         try
         {
-             const res = await axios.delete(`http://192.168.43.121:8080/api/delete/${id}`)
+             const res = await axios.delete(`http://192.168.29.174:8080/api/delete/${id}`)
              console.log(res);
              setDeleteTrigger((prev)=> !prev);
              setDeletePop((prev) => !prev);
@@ -73,15 +71,42 @@ export default function Home() {
             console.log("error");
             
         }
-       
-
     }
-
 
     const handleDeleteTrigger = (id) =>{
         setDeletePop((prev)=> !prev)
         setId(id);
     }
+
+    const handleFavourite = (id) =>{
+
+        setFavId(id);
+        handleFav(id);
+
+    }
+
+    const isFavourite = (id) =>  FavId.includes(id);
+
+
+
+    const handleFav = async (id) =>{
+
+
+        try{
+            const res = await axios.post(`http://192.168.29.174:8080/api/favourite/${id}`)
+            console.log(res);
+            setFavId(res.data)
+            
+            toast("Added Favourite", {
+                icon: '✌️',
+            });
+        }
+        catch(error)
+        {
+            console.log(error);
+        }
+    }
+
 
   return (
 
@@ -100,11 +125,12 @@ export default function Home() {
                         onClick={() => setIsOpened((prev)=> !prev)}
                         className='bg-green-600 w-fit p-2 cursor-pointer hover:bg-green-900 rounded-sm'
                     >
-                        <AddIcon></AddIcon>
+                        <AddIcon
+                        ></AddIcon>
                     </button>
                 </div>
                 <div className='flex items-start justify-start w-2/3 gap-10'>
-                    <p className='text-gray-500'>{note.length}: notes</p>
+                    <p className='text-gray-500'>{note?.length}: notes</p>
                 </div>
 
                 <div className='all-notes mt-5 w-2/3  grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 lg:grid-cols-4'>
@@ -114,18 +140,28 @@ export default function Home() {
                         (
                             note.map((n) =>(
 
-                                  <div className='relative'>
+                                  <div className='relative group' key={n.id}>
                                         <div className='absolute right-0 p-2 flex justify-end'>
                                                 <button 
                                                     className='cursor-pointer hover:shadow-2xs'
-                                                    onClick={() => setFourite((prev) => !prev)}
+                                                    onClick={() => handleFavourite(n.id)}
                                                 >
-                                                <StarBorderIcon></StarBorderIcon>
+                                                {
+                                                    isFavourite(n.id)  ? 
+                                                    <StarIcon
+                                                        sx={{color:'green'}}
+                                                    ></StarIcon>
+                                                    :
+                                                    <StarBorderIcon
+                                                        sx={{color:'green'}}
+                                                    ></StarBorderIcon>
+                                                }
+                                                
                                                 </button>
                                         </div>
 
                                         <div onClick={()=>handleNote(n)}  className='bg-gray-900 border   border-green-600 gap-4 cursor-pointer hover:bg-gray-800 flex flex-col  text-gray-400 p-6 h-full rounded-sm' key={n.id}>
-                                        
+                                            
                                             <h1>{n.title}</h1>
                                             <div className='flex justify-end '>
                                                 
@@ -133,11 +169,14 @@ export default function Home() {
                                             </div>
                                         </div>
 
-                                        <div className='absolute left-1 bottom-1 '>
+                                        <div className='absolute left-1 bottom-1 opacity-0 group-hover:opacity-100'>
                                             <button 
                                                 onClick={() => handleDeleteTrigger(n.id)}
+                                                className='cursor-pointer'
                                             >
-                                                <DeleteIcon></DeleteIcon>
+                                                <DeleteIcon
+                                                    sx={{color:'green'}}
+                                                ></DeleteIcon>
                                             </button>
                                         </div>
                                   </div>
@@ -148,11 +187,7 @@ export default function Home() {
                             <p>Note not found</p>
                         )
                     }
-
-
                 </div>
-
-                
             </div>
             )
         }
@@ -171,7 +206,7 @@ export default function Home() {
             }
         </div>
 
-        <div>
+        <div className=''>
             {
                 deletePop ?
                 (

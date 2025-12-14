@@ -1,6 +1,7 @@
 package SyncNotes.Sync.Notes.Taking.Application.Models;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -25,10 +26,14 @@ public class Note {
     @Column(nullable = false, length = 2000)
     private String content;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-mm-yyyy")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-mm-yyyy, hh:mm:ss")
     private Date updatedAt;
 
-    private boolean favourite = false;
+    @ManyToOne
+    @JoinColumn(name = "favourite_id")
+    @JsonIgnore
+    private Favourite favourite;
+
 
     public Note()
     {

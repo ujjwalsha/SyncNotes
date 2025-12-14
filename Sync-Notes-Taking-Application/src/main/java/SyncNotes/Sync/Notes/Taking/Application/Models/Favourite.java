@@ -15,7 +15,7 @@ public class Favourite {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
 
-    @OneToMany
-    @JoinColumn(name = "favourite_id")
+    @OneToMany(mappedBy = "favourite")
     private List<Note> notes;
+
 }

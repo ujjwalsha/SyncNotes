@@ -14,4 +14,5 @@ import java.util.UUID;
 public interface NoteRepo extends JpaRepository<Note, UUID> {
     Optional<Note> findByTitle(String title);
 
+    List<Note> findByFavouriteId(UUID id);
 }
