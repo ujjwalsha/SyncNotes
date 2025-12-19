@@ -26,9 +26,14 @@ export default function NotesPage() {
                                     content
                                 });
             console.log(res);
+            setIsEditing((prev) => !prev)
 
             toast("Updated", {
                     icon: '✌️',
+                    style:{
+                        background:"green",
+                        color:"white"
+                    }
              });
             
         }

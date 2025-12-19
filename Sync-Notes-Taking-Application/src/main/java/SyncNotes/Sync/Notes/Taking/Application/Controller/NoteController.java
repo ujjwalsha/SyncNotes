@@ -67,4 +67,11 @@ public class NoteController {
     {
         return favouriteService.removeById(id);
     }
+
+    @GetMapping("/search")
+    public ResponseEntity<?> searchNotes(@RequestParam(name = "query", required = false) String query)
+    {
+        return noteService.searchNotes(query);
+    }
+
 }

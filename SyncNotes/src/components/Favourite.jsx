@@ -39,6 +39,10 @@ export default function Favourite() {
             setTrigger((prev) => !prev);
             toast("Removed successfully!", {
                 icon: '✌️',
+                style:{
+                    background:"green",
+                    color:"white"
+                }
             });
         }
         catch(error)

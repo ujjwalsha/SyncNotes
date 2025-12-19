@@ -10,7 +10,7 @@ export default function Navbar() {
         <Link 
             to={"/"}
             className='logo-container'>
-            <h1 className='text-2xl'>Sync<span className='text-green-600 font-semibold'>Notes</span></h1>
+            <h1 className='text-2xl font-semibold'>Sync<span className='text-green-600 font-semibold'>Notes</span></h1>
         </Link>
 
         <div className='search-container flex gap-3'>

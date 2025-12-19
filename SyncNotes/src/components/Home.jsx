@@ -64,6 +64,10 @@ export default function Home() {
              setDeletePop((prev) => !prev);
              toast(res.data.message, {
                     icon: '✌️',
+                    style:{
+                        background:"green",
+                        color:"white"
+                    }
                  });
         }
         catch(error)
@@ -99,6 +103,10 @@ export default function Home() {
             
             toast("Added Favourite", {
                 icon: '✌️',
+                style:{
+                    background:"green",
+                    color:"white"
+                }
             });
         }
         catch(error)

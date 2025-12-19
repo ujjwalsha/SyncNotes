@@ -25,7 +25,7 @@ public class NoteService {
 
     public ResponseEntity<?> getAll() {
 
-        List<Note> data = noteRepo.findAll();
+        List<Note> data = noteRepo.findLatestNotes();
 
         if(data.isEmpty())
             return new ResponseEntity<>(HttpStatus.valueOf(400));
@@ -76,5 +76,17 @@ public class NoteService {
 
         return new ResponseEntity<>("updated successfully", HttpStatus.ACCEPTED);
 
+    }
+
+    public ResponseEntity<?> searchNotes(String query) {
+
+        if(query == null || query.isBlank())
+            return new ResponseEntity<>(noteRepo.findAllNotes(), HttpStatus.OK);
+
+        List<Note> noteList = noteRepo.searchNotes(query);
+
+
+
+        return new ResponseEntity<>(noteList, HttpStatus.OK);
     }
 }

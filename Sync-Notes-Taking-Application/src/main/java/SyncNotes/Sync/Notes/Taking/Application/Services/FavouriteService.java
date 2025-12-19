@@ -62,7 +62,7 @@ public class FavouriteService {
         if(fav.isPresent())
         {
             System.out.println(fav.get().getId());
-            List<Note> allNote = noteRepo.findByFavouriteId(fav.get().getId());
+            List<Note> allNote = noteRepo.findByFavouriteById(fav.get().getId());
 
             return ResponseEntity.status(HttpStatus.valueOf(200)).body(allNote);
         }

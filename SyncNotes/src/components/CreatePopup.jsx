@@ -28,6 +28,10 @@ function CreatePopup({setIsOpened}) {
 
                 toast("successfull", {
                     icon: '✌️',
+                    style:{
+                        background:"green",
+                        color:"white"
+                    }
                  });
                             
                     

@@ -6,10 +6,13 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.context.annotation.Fallback;
 
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.DuplicateFormatFlagsException;
 import java.util.UUID;
 
 @Data
@@ -26,17 +29,16 @@ public class Note {
     @Column(nullable = false, length = 2000)
     private String content;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-mm-yyyy, hh:mm:ss")
+    @UpdateTimestamp
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-mm-yyyy, HH:MM:SS")
     private Date updatedAt;
+
+    @CreationTimestamp
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-mm-yyyy, HH:MM:SS")
+    private Date createdAt;
 
     @ManyToOne
     @JoinColumn(name = "favourite_id")
     @JsonIgnore
     private Favourite favourite;
-
-
-    public Note()
-    {
-        updatedAt = new Date();
-    }
 }
